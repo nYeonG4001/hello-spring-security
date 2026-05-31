@@ -22,6 +22,7 @@ import static org.mockito.BDDMockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 
 // @SpringBootTest : 전체 Application Context 로드 (Controller, Service, Security, JPA 등 모든 Bean 등록)
 //                   Controller는 Spring Bean이므로 Spring Context 없이는 테스트 불가
@@ -53,14 +54,16 @@ class ProductControllerTest {
     @WithMockUser(roles = "USER")
     @DisplayName("인증된 사용자 - 상품 목록 조회 성공 (200)")
     void listProducts_authenticated_returns200() throws Exception {
-        given(productService.findAll()).willReturn(List.of(
-            new Product("Spring Boot 4 교재", 35000, "실습서", 50)
-        ));
+        given(productService.getProducts(any())).willReturn(
+                new org.springframework.data.domain.PageImpl<>(List.of(
+                        new Product("Spring Boot 4 교재", 35000, "실습서", 50)
+                ))
+        );
 
         mockMvc.perform(get("/products"))
-            .andExpect(status().isOk())
-            .andExpect(view().name("products/list"))
-            .andExpect(model().attributeExists("products"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("products/list"))
+                .andExpect(model().attributeExists("productPage"));
     }
 
     @Test
