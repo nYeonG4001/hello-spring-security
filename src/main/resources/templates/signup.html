@@ -52,5 +52,12 @@
         </div>
     </div>
 </div>
+
+<footer class="text-center text-muted py-3 mt-5" style="font-size:0.85rem; border-top:1px solid #dee2e6;">
+    실습 수행 일시:
+    <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy년 MM월 dd일 HH:mm:ss')}"></span>
+    &nbsp;│&nbsp; 학번: 2371324 &nbsp;│&nbsp; 성명: 박하영
+</footer>
+
 </body>
 </html>
